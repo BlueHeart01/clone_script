@@ -11,3 +11,5 @@ git clone https://github.com/BlueHeart01/redwood_vendor_xiaomi_redwood-miuicamer
 git clone https://github.com/BlueHeart01/vendor_oneplus_dolby.git vendor/oneplus/dolby
 
 git clone https://github.com/BlueHeart01/hardware_xiaomi.git hardware/xiaomi
+
+git clone https://github.com/BlueHeart01/vendor_bcr.git vendor/bcr
