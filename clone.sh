@@ -3,57 +3,54 @@
 clone_repo() {
     REPO_URL=$1
     DEST=$2
+    BRANCH=$3
 
     echo ""
-    echo "======================================"
-    echo "Repository: $REPO_URL"
-    echo "Destination: $DEST"
-    echo "Fetching branches..."
-    echo "======================================"
-
-    # Fetch branches
-    branches=$(git ls-remote --heads "$REPO_URL" | awk '{print $2}' | sed 's|refs/heads/||')
-
-    echo ""
-    echo "Available branches:"
-    echo "-------------------"
-
-    for b in $branches; do
-        echo " - $b"
-    done
-
-    echo ""
-    read -p "Enter branch to clone: " branch
-
-    if [[ ! "$branches" =~ "$branch" ]]; then
-        echo "Branch '$branch' not found!"
-        exit 1
-    fi
-
-    echo ""
-    echo "Cloning $branch ..."
-    echo ""
-
-    git clone --depth=1 -b "$branch" "$REPO_URL" "$DEST"
+    echo "Cloning: $(basename $REPO_URL)"
+    git clone --depth=1 -b "$BRANCH" "$REPO_URL" "$DEST"
 }
 
 # ========================
-# Clone repos
+# Fetch branches from device tree only
 # ========================
+DEVICE_REPO="https://github.com/BlueHeart01/device_xiaomi_redwood.git"
 
-clone_repo https://github.com/BlueHeart01/device_xiaomi_redwood.git device/xiaomi/redwood
+echo ""
+echo "======================================"
+echo "Fetching branches from device tree..."
+echo "======================================"
 
-clone_repo https://github.com/BlueHeart01/vendor_xiaomi_redwood.git vendor/xiaomi/redwood
+branches=($(git ls-remote --heads "$DEVICE_REPO" | awk '{print $2}' | sed 's|refs/heads/||'))
 
-clone_repo https://github.com/Redwood-AOSP/android_device_xiaomi_redwood-kernel.git device/xiaomi/redwood-kernel
+echo ""
+echo "Available branches:"
+echo "-------------------"
+for i in "${!branches[@]}"; do
+    echo " $((i+1))) ${branches[$i]}"
+done
+echo ""
 
-clone_repo https://github.com/BlueHeart01/redwood_vendor_xiaomi_redwood-miuicamera.git vendor/xiaomi/redwood-miuicamera
+read -p "Select branch number: " selection
 
-clone_repo https://github.com/BlueHeart01/vendor_oneplus_dolby.git vendor/oneplus/dolby
+if ! [[ "$selection" =~ ^[0-9]+$ ]] || (( selection < 1 || selection > ${#branches[@]} )); then
+    echo "Invalid selection!"
+    exit 1
+fi
 
-clone_repo https://github.com/BlueHeart01/hardware_xiaomi.git hardware/xiaomi
+BRANCH="${branches[$((selection-1))]}"
+echo ""
+echo "Selected branch: $BRANCH"
 
-clone_repo https://github.com/BlueHeart01/vendor_bcr.git vendor/bcr
+# ========================
+# Clone all repos
+# ========================
+clone_repo https://github.com/BlueHeart01/device_xiaomi_redwood.git device/xiaomi/redwood "$BRANCH"
+clone_repo https://github.com/BlueHeart01/vendor_xiaomi_redwood.git vendor/xiaomi/redwood "$BRANCH"
+clone_repo https://github.com/Redwood-AOSP/android_device_xiaomi_redwood-kernel.git device/xiaomi/redwood-kernel "$BRANCH"
+clone_repo https://github.com/BlueHeart01/redwood_vendor_xiaomi_redwood-miuicamera.git vendor/xiaomi/redwood-miuicamera "$BRANCH"
+clone_repo https://github.com/BlueHeart01/vendor_oneplus_dolby.git vendor/oneplus/dolby "$BRANCH"
+clone_repo https://github.com/BlueHeart01/hardware_xiaomi.git hardware/xiaomi "$BRANCH"
+clone_repo https://github.com/BlueHeart01/vendor_bcr.git vendor/bcr "$BRANCH"
 
 echo ""
 echo "All repositories cloned successfully."
