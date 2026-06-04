@@ -24,7 +24,7 @@ clone_repo() {
 # Fetch branches from device tree only
 # ========================
 
-DEVICE_REPO="https://github.com/BlueHeart01/device_xiaomi_redwood.git"
+DEVICE_REPO="https://github.com/BlueHeart01/android_device_xiaomi_redwood.git"
 
 echo ""
 echo "======================================"
@@ -62,8 +62,8 @@ echo "Selected branch: $BRANCH"
 # Clone all repos
 # ========================
 
-clone_repo https://github.com/BlueHeart01/device_xiaomi_redwood.git device/xiaomi/redwood "$BRANCH"
-clone_repo https://github.com/BlueHeart01/vendor_xiaomi_redwood.git vendor/xiaomi/redwood "$BRANCH"
+clone_repo https://github.com/BlueHeart01/android_device_xiaomi_redwood.git device/xiaomi/redwood "$BRANCH"
+clone_repo https://github.com/BlueHeart01/android_vendor_xiaomi_redwood.git vendor/xiaomi/redwood "$BRANCH"
 clone_repo https://github.com/Redwood-AOSP/android_device_xiaomi_redwood-kernel.git device/xiaomi/redwood-kernel "$BRANCH"
 clone_repo https://github.com/BlueHeart01/redwood_vendor_xiaomi_redwood-miuicamera.git vendor/xiaomi/redwood-miuicamera "$BRANCH"
 clone_repo https://github.com/BlueHeart01/vendor_sony_dolby.git vendor/sony/dolby "$BRANCH"
